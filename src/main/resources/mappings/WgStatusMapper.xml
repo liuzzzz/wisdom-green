@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.secrething.dao.WgStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.secrething.entity.WgStatus" >
+    <result column="station_no" property="stationNo" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="tem_station" property="temStation" jdbcType="VARCHAR" />
+    <result column="tem_env" property="temEnv" jdbcType="VARCHAR" />
+    <result column="public_time" property="publicTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.secrething.entity.WgStatus" >
+    insert into wg_status (station_no, longitude, latitude, 
+      tem_station, tem_env, public_time
+      )
+    values (#{stationNo,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, 
+      #{temStation,jdbcType=VARCHAR}, #{temEnv,jdbcType=VARCHAR}, #{publicTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select station_no, longitude, latitude, tem_station, tem_env, public_time
+    from wg_status
+  </select>
+</mapper>

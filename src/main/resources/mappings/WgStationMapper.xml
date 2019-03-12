@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.secrething.dao.WgStationMapper" >
+  <resultMap id="BaseResultMap" type="com.secrething.entity.WgStation" >
+    <id column="station_id" property="stationId" jdbcType="INTEGER" />
+    <result column="station_no" property="stationNo" jdbcType="VARCHAR" />
+    <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="station_status" property="stationStatus" jdbcType="VARCHAR" />
+    <result column="station_des" property="stationDes" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wg_station
+    where station_id = #{stationId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.secrething.entity.WgStation" >
+    insert into wg_station (station_id, station_no, station_name, 
+      city, station_status, station_des
+      )
+    values (#{stationId,jdbcType=INTEGER}, #{stationNo,jdbcType=VARCHAR}, #{stationName,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{stationStatus,jdbcType=VARCHAR}, #{stationDes,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.secrething.entity.WgStation" >
+    update wg_station
+    set station_no = #{stationNo,jdbcType=VARCHAR},
+      station_name = #{stationName,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      station_status = #{stationStatus,jdbcType=VARCHAR},
+      station_des = #{stationDes,jdbcType=VARCHAR}
+    where station_id = #{stationId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select station_id, station_no, station_name, city, station_status, station_des
+    from wg_station
+    where station_id = #{stationId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select station_id, station_no, station_name, city, station_status, station_des
+    from wg_station
+  </select>
+</mapper>

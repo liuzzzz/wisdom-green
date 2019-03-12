@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.secrething.dao.WgPollutionMapper" >
+  <resultMap id="BaseResultMap" type="com.secrething.entity.WgPollution" >
+    <result column="station_num" property="stationNum" jdbcType="VARCHAR" />
+    <result column="pm25" property="pm25" jdbcType="VARCHAR" />
+    <result column="pm10" property="pm10" jdbcType="VARCHAR" />
+    <result column="so2" property="so2" jdbcType="VARCHAR" />
+    <result column="no2" property="no2" jdbcType="VARCHAR" />
+    <result column="o3" property="o3" jdbcType="VARCHAR" />
+    <result column="co" property="co" jdbcType="VARCHAR" />
+    <result column="real_aqi" property="realAqi" jdbcType="VARCHAR" />
+    <result column="prd_aqi" property="prdAqi" jdbcType="VARCHAR" />
+    <result column="public_time" property="publicTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.secrething.entity.WgPollution" >
+    insert into wg_pollution (station_num, pm25, pm10, 
+      so2, no2, o3, co, 
+      real_aqi, prd_aqi, public_time
+      )
+    values (#{stationNum,jdbcType=VARCHAR}, #{pm25,jdbcType=VARCHAR}, #{pm10,jdbcType=VARCHAR}, 
+      #{so2,jdbcType=VARCHAR}, #{no2,jdbcType=VARCHAR}, #{o3,jdbcType=VARCHAR}, #{co,jdbcType=VARCHAR}, 
+      #{realAqi,jdbcType=VARCHAR}, #{prdAqi,jdbcType=VARCHAR}, #{publicTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select station_num, pm25, pm10, so2, no2, o3, co, real_aqi, prd_aqi, public_time
+    from wg_pollution
+  </select>
+</mapper>

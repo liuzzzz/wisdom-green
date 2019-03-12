@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.secrething.dao.WgUserMapper" >
+  <resultMap id="BaseResultMap" type="com.secrething.entity.WgUser" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="phonenumber" property="phonenumber" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="institutions" property="institutions" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="user_status" property="userStatus" jdbcType="BIT" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wg_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.secrething.entity.WgUser" >
+    insert into wg_user (user_id, user_name, password, 
+      role_id, phonenumber, email, 
+      institutions, sex, user_status
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{roleId,jdbcType=INTEGER}, #{phonenumber,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{institutions,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{userStatus,jdbcType=BIT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.secrething.entity.WgUser" >
+    update wg_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      role_id = #{roleId,jdbcType=INTEGER},
+      phonenumber = #{phonenumber,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      institutions = #{institutions,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=BIT}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select user_id, user_name, password, role_id, phonenumber, email, institutions, sex, 
+    user_status
+    from wg_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select user_id, user_name, password, role_id, phonenumber, email, institutions, sex, 
+    user_status
+    from wg_user
+  </select>
+</mapper>
