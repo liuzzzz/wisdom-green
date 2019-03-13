@@ -19,6 +19,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +112,6 @@ public class ESUtil {
         //search(queryBuilder());
 
 
-
     }
 
     public static QueryBuilder queryBuilder() {
@@ -121,14 +122,30 @@ public class ESUtil {
 
     }
 
-    private static final Set<String> s = new HashSet<>();
     private static final SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
-    public static SearchResponse search(QueryBuilder builder,String[] sources) throws Exception {
+
+    public static SearchResponse search(QueryBuilder builder, String[] sources) throws Exception {
+        return search(builder, sources, -1, -1, null);
+    }
+
+    public static SearchResponse search(QueryBuilder builder, String[] sources, SortBuilder sortBuilder) throws Exception {
+        return search(builder, sources, -1, -1, sortBuilder);
+    }
+
+    public static SearchResponse search(QueryBuilder builder, String[] sources, int from, int size, SortBuilder sortBuilder) throws Exception {
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        if (from > 0) {
+            sourceBuilder.from(from);
+        }
+        if (size > 0) {
+            sourceBuilder.size(size);
+        }
+        if (null != sourceBuilder) {
+            sourceBuilder.sort(sortBuilder);
+        }
         sourceBuilder.query(builder);
         sourceBuilder.fetchSource(sources, null);
-        System.out.println(sourceBuilder.toString());
         SearchRequest request = new SearchRequest(new String[]{"air_quality"}, sourceBuilder);
         SearchResponse response = client.search(request);
         /*SearchHit[] hits = response.getHits().getHits();
@@ -138,9 +155,10 @@ public class ESUtil {
         }*/
         return response;
     }
+
     public static BulkResponse insert(List list) throws Exception {
         BulkRequest bulkRequest = new BulkRequest();
-        for (Object o:list){
+        for (Object o : list) {
             Record record = Record.create(o, UUIDBuilder.genUUID());
             IndexRequest req = new IndexRequest();
             req.index(record.getIndex());
@@ -150,6 +168,7 @@ public class ESUtil {
         }
         return client.bulk(bulkRequest);
     }
+
     public static void testIndex() throws Exception {
         //File file = new File("/Users/xiaoq58/Desktop/q/basic.csv");
         File f = new File("/Users/xiaoq58/Desktop/newdata");
@@ -157,7 +176,7 @@ public class ESUtil {
         for (File file : f.listFiles()) {
 
 
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"GBK"));
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "GBK"));
             String line = null;
             //Class<AirQuality> clzz = AirQuality.class;
             //Field[] fields = clzz.getDeclaredFields();
@@ -176,7 +195,7 @@ public class ESUtil {
                 quality.setPm10(Double.valueOf(item[13]));
                 quality.setPm2_5(Double.valueOf(item[17]));
                 quality.setPubTime(item[23]);
-                quality.setPubDate(item[23].substring(0,10));
+                quality.setPubDate(item[23].substring(0, 10));
                 quality.setPubTimeLong(format.parse(item[23]).getTime());
                 /*for (int j = 0; j < item.length; j++) {
                     fields[j].setAccessible(true);
@@ -222,12 +241,5 @@ public class ESUtil {
         System.exit(1);
     }
 
-    static {
-        for (int i = 1; i < 10; i++) {
-            s.add("2018-01-0" + i);
-        }
-        for (int i = 10; i < 32; i++) {
-            s.add("2018-01-" + i);
-        }
-    }
+
 }
