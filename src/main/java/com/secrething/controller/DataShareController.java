@@ -22,10 +22,12 @@ public class DataShareController {
     HistoryDataService historyDataService;
 
 
+    @RequestMapping("realData")
     public DataResponse realDataAPI(String jsonParams) {
         return realDataService.realData(jsonParams);
     }
 
+    @RequestMapping("historyData")
     public DataResponse historyDataAPI(String jsonParams) {
         return historyDataService.historyData(jsonParams);
     }
