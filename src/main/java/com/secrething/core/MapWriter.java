@@ -47,10 +47,10 @@ public abstract class MapWriter {
                 StringBuilder parseBuilder = new StringBuilder("Object parseObject(java.util.Map map) throws Exception{");
                 parseBuilder.append(objClassName).append(" obj = new ").append(objClassName).append("();");
                 parseBuilder.append("if(null == map){return obj;}");
-                parseBuilder.append("com.secrething.esutil.com.secrething.core.DateParser parser = this.getParser(); if(null == parser){parser = com.secrething.esutil.com.secrething.core.DatePaserEnum.LONG;}");
+                parseBuilder.append("com.secrething.core.DateParser parser = this.getParser(); if(null == parser){parser = com.secrething.core.DatePaserEnum.LONG;}");
                 toMapBuilder.append("java.util.HashMap m = new java.util.HashMap();");
                 toMapBuilder.append("if(null == o){return m;}");
-                toMapBuilder.append("com.secrething.esutil.com.secrething.core.DateParser parser = this.getParser(); if(null == parser){parser = com.secrething.esutil.com.secrething.core.DatePaserEnum.LONG;}");
+                toMapBuilder.append("com.secrething.core.DateParser parser = this.getParser(); if(null == parser){parser = com.secrething.core.DatePaserEnum.LONG;}");
                 toMapBuilder.append("if(o instanceof " + objClassName + "){");
                 toMapBuilder.append(objClassName).append(" obj = (" + objClassName + ")o;");
                 Class foreachClass = clzz;

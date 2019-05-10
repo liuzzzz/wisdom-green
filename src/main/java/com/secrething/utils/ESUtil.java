@@ -171,7 +171,7 @@ public class ESUtil {
 
     public static void testIndex() throws Exception {
         //File file = new File("/Users/xiaoq58/Desktop/q/basic.csv");
-        File f = new File("/Users/xiaoq58/Desktop/newdata");
+        File f = new File("/Users/liuzz58/Desktop/newdata");
         List<AirQuality> list = new ArrayList<>();
         for (File file : f.listFiles()) {
 
@@ -238,7 +238,7 @@ public class ESUtil {
         }
         if (bulkRequest.numberOfActions() > 0)
             client.bulk(bulkRequest);
-        System.exit(1);
+        System.in.read();
     }
 
 

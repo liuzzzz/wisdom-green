@@ -24,7 +24,6 @@ public class ESServiceImpl implements ESService {
     public SearchResponse search(QueryBuilder builder, String[] sources, SortBuilder sortBuilder) throws Exception {
         return ESUtil.search(builder, sources, sortBuilder);
     }
-
     @Override
     public SearchResponse search(QueryBuilder builder, int from, int size, String[] sources) throws Exception {
         return ESUtil.search(builder, sources,from,size,null);

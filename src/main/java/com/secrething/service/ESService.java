@@ -15,9 +15,8 @@ public interface ESService {
     SearchResponse search(QueryBuilder builder, String[] sources) throws Exception;
 
     SearchResponse search(QueryBuilder builder, String[] sources, SortBuilder sortBuilder) throws Exception;
-
-    SearchResponse search(QueryBuilder builder, String[] sources, int from, int size) throws Exception;
-    SearchResponse search(QueryBuilder builder, String[] sources, int from, int size, SortBuilder sortBuilder) throws Exception;
+    SearchResponse search(QueryBuilder builder, int from, int size, String[] sources) throws Exception;
+    SearchResponse search(QueryBuilder builder, int from, int size, String[] sources, SortBuilder sortBuilder) throws Exception;
 
     BulkResponse insert(List list) throws Exception;
 }
