@@ -7,5 +7,5 @@ import com.secrething.model.DataResponse;
  */
 public interface HistoryDataService {
 
-    DataResponse historyData(String jsonParams);
+    DataResponse queryFromES(String jsonParams);
 }

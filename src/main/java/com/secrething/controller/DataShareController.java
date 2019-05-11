@@ -27,8 +27,8 @@ public class DataShareController {
         return realDataService.realData(jsonParams);
     }
 
-    @RequestMapping("historyData")
+    @RequestMapping("queryFromES")
     public DataResponse historyDataAPI(String jsonParams) {
-        return historyDataService.historyData(jsonParams);
+        return historyDataService.queryFromES(jsonParams);
     }
 }

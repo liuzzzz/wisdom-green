@@ -37,23 +37,42 @@ import java.util.Set;
 public class ESUtil {
     private static Logger log = LoggerFactory.getLogger(ESUtil.class);
 
-    private static String esUrl;
-    private static String clusterName;
-    private static String alias;
-    private static String type;
-    private static RestHighLevelClient client = ElasticClientHolder.clientInstance;
+    public static String esUrl;
+    public static String clusterName;
+    public static String alias;
+    public static String type;
+    public static RestHighLevelClient client = ElasticClientHolder.clientInstance;
 
     private ESUtil() {
     }
 
-    private static RestHighLevelClient initElasClient() {
+    public static RestHighLevelClient initElasClient() {
         RestHighLevelClient client = null;
         try {
-            clusterName = PropUtil.getProperty("es.cluster.name");
-            esUrl = PropUtil.getProperty("es.url");
-            alias = PropUtil.getProperty("es.alias");
-            type = PropUtil.getProperty("es.type");
 
+            log.info(String.format("esurl:%s clusterName:%s alias:%s type:%s", esUrl, clusterName, alias, type));
+            List<String> result = Splitter.on(",").trimResults().splitToList(esUrl);
+
+            List<HttpHost> transform = Lists.transform(result, input -> {
+                String[] ipPort = input.trim().split(":");
+                if (ipPort == null || ipPort.length < 2) {
+                    return null;
+                }
+                return new HttpHost(ipPort[0], Integer.parseInt(ipPort[1]));
+            });
+            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY,
+                    new UsernamePasswordCredentials("xiaoq", "hello_xiaoq08"));
+            client = new RestHighLevelClient(RestClient.builder(transform.toArray(new HttpHost[0])).setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)));
+            log.info("elas client init success");
+        } catch (Exception e) {
+            log.error("init elas client is error", e);
+        }
+        return client;
+    }
+    public static RestHighLevelClient initElasClient(String clusterName,String esUrl,String alias,String type) {
+        RestHighLevelClient client = null;
+        try {
             log.info(String.format("esurl:%s clusterName:%s alias:%s type:%s", esUrl, clusterName, alias, type));
             List<String> result = Splitter.on(",").trimResults().splitToList(esUrl);
 
@@ -122,7 +141,7 @@ public class ESUtil {
 
     }
 
-    private static final SimpleDateFormat format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public static SearchResponse search(QueryBuilder builder, String[] sources) throws Exception {
         return search(builder, sources, -1, -1, null);
@@ -186,17 +205,31 @@ public class ESUtil {
                     continue;
                 String item[] = line.split(",");//CSV格式文件为逗号分隔符文件，这里根据逗号切分
                 AirQuality quality = new AirQuality();
-                quality.setStation(item[1]);
-                quality.setAqi(Double.valueOf(item[3]));
-                quality.setSo2(Double.valueOf(item[5]));
-                quality.setCo(Double.valueOf(item[7]));
-                quality.setNo2(Double.valueOf(item[9]));
-                quality.setO3(Double.valueOf(item[11]));
-                quality.setPm10(Double.valueOf(item[13]));
-                quality.setPm2_5(Double.valueOf(item[17]));
-                quality.setPubTime(item[23]);
-                quality.setPubDate(item[23].substring(0, 10));
-                quality.setPubTimeLong(format.parse(item[23]).getTime());
+
+                quality.setStationNo(item[1]);
+                quality.setStation(item[2]);
+                quality.setAqi(Double.valueOf(item[4]));
+                quality.setSo2(Double.valueOf(item[7]));
+                quality.setCo(Double.valueOf(item[9]));
+                quality.setNo2(Double.valueOf(item[11]));
+                quality.setO3(Double.valueOf(item[13]));
+                quality.setPm10(Double.valueOf(item[15]));
+                quality.setPm2_5(Double.valueOf(item[19]));
+                String time = item[25];
+                String[] d_t = time.split(" ");
+                String d = d_t[0];
+                String t = d_t[1];
+                String[] ymds = d.split("/");
+                String yyyy = ymds[0];
+                String mm = ymds[1].length() == 2 ? ymds[1] : 0 + ymds[1];
+                String dd = ymds[2].length() == 2 ? ymds[2] : 0 + ymds[2];
+                String[] hhmm = t.split(":");
+                String hh = hhmm[0].length() == 2 ? hhmm[0] : 0 + hhmm[0];
+                String MM = hhmm[1].length() == 2 ? hhmm[1] : 0 + hhmm[1];
+                String formatTime = yyyy+ "-"+mm + "-" + dd+" "+hh+":"+MM;
+                quality.setPubTime(formatTime);
+                quality.setPubDate(formatTime.substring(0, 10));
+                quality.setPubTimeLong(format.parse(formatTime).getTime());
                 /*for (int j = 0; j < item.length; j++) {
                     fields[j].setAccessible(true);
                     try {

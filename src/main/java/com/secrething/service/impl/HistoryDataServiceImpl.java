@@ -31,7 +31,7 @@ public class HistoryDataServiceImpl implements HistoryDataService {
     @Autowired
     ESService  esService;
     @Override
-    public DataResponse historyData(String jsonParams) {
+    public DataResponse queryFromES(String jsonParams) {
         try {
             JSONObject json = JSONObject.parseObject(jsonParams);
             String station = json.getString("station");

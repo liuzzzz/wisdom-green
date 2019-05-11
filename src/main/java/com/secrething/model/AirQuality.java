@@ -10,6 +10,9 @@ import lombok.Data;
 @Document(index = "air_quality",type = "air_quality")
 @Data
 public class AirQuality extends Base{
+
+    @Key("station_no")
+    private String stationNo;
     @Key
     private String station;
     @Key

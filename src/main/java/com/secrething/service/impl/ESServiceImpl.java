@@ -1,6 +1,7 @@
 package com.secrething.service.impl;
 
 import com.secrething.service.ESService;
+import com.secrething.utils.ESQueryUtil;
 import com.secrething.utils.ESUtil;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -22,7 +23,7 @@ public class ESServiceImpl implements ESService {
 
     @Override
     public SearchResponse search(QueryBuilder builder, String[] sources, SortBuilder sortBuilder) throws Exception {
-        return ESUtil.search(builder, sources, sortBuilder);
+        return ESQueryUtil.multiCondiQuery(builder, sources, sortBuilder);
     }
     @Override
     public SearchResponse search(QueryBuilder builder, int from, int size, String[] sources) throws Exception {
