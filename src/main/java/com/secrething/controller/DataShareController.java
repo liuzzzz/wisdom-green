@@ -4,6 +4,7 @@ import com.secrething.model.DataResponse;
 import com.secrething.service.HistoryDataService;
 import com.secrething.service.RealDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class DataShareController {
     }
 
     @RequestMapping("queryFromES")
-    public DataResponse historyDataAPI(String jsonParams) {
+    public DataResponse historyDataAPI(@RequestBody String jsonParams) {
         return historyDataService.queryFromES(jsonParams);
     }
 }

@@ -38,9 +38,9 @@ public class HistoryDataServiceImpl implements HistoryDataService {
             Date startTime = json.getDate("startTime");
             Date endTime = json.getDate("endTime");
             List<String> indexList = json.getJSONArray("indexList").toJavaList(String.class);
-            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("station",station));
-            queryBuilder.filter(QueryBuilders.rangeQuery("pubTime").gte(startTime).lte(endTime));
-            SortBuilder sortBuilder = SortBuilders.fieldSort("pubTime").order(SortOrder.DESC);
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termsQuery("station.keyword",station));
+            queryBuilder.filter(QueryBuilders.rangeQuery("pubTimeLong").gte(startTime.getTime()).lte(endTime.getTime()));
+            SortBuilder sortBuilder = SortBuilders.fieldSort("pubTimeLong").order(SortOrder.DESC);
             SearchResponse response = esService.search(queryBuilder,indexList.toArray(new String[]{}),sortBuilder);
             List<Map> list = new ArrayList<>();
             for (SearchHit hit:response.getHits().getHits()){

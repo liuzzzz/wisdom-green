@@ -49,6 +49,10 @@ public class ESUtil {
     public static RestHighLevelClient initElasClient() {
         RestHighLevelClient client = null;
         try {
+            clusterName = PropUtil.getProperty("es.cluster.name");
+            esUrl = PropUtil.getProperty("es.url");
+            alias = PropUtil.getProperty("es.alias");
+            type = PropUtil.getProperty("es.type");
 
             log.info(String.format("esurl:%s clusterName:%s alias:%s type:%s", esUrl, clusterName, alias, type));
             List<String> result = Splitter.on(",").trimResults().splitToList(esUrl);
@@ -70,30 +74,6 @@ public class ESUtil {
         }
         return client;
     }
-    public static RestHighLevelClient initElasClient(String clusterName,String esUrl,String alias,String type) {
-        RestHighLevelClient client = null;
-        try {
-            log.info(String.format("esurl:%s clusterName:%s alias:%s type:%s", esUrl, clusterName, alias, type));
-            List<String> result = Splitter.on(",").trimResults().splitToList(esUrl);
-
-            List<HttpHost> transform = Lists.transform(result, input -> {
-                String[] ipPort = input.trim().split(":");
-                if (ipPort == null || ipPort.length < 2) {
-                    return null;
-                }
-                return new HttpHost(ipPort[0], Integer.parseInt(ipPort[1]));
-            });
-            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials("xiaoq", "hello_xiaoq08"));
-            client = new RestHighLevelClient(RestClient.builder(transform.toArray(new HttpHost[0])).setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)));
-            log.info("elas client init success");
-        } catch (Exception e) {
-            log.error("init elas client is error", e);
-        }
-        return client;
-    }
-
     private static class ElasticClientHolder {
         private static final RestHighLevelClient clientInstance = initElasClient();
     }
@@ -154,6 +134,12 @@ public class ESUtil {
     public static SearchResponse search(QueryBuilder builder, String[] sources, int from, int size, SortBuilder sortBuilder) throws Exception {
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        if (from < 0){
+            from = 0;
+        }
+        if (size < 10){
+            size = 100;
+        }
         if (from > 0) {
             sourceBuilder.from(from);
         }

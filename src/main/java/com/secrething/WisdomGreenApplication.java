@@ -1,4 +1,4 @@
-package com.secrething.wisdomgreen;
+package com.secrething;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
