@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class RealDataDao {
     @Autowired
     ESService esService;
-    public SearchResponse searchPollution(String station,String[] sources) throws Exception{
+    public SearchResponse selectPollutionData(String station, String[] sources) throws Exception{
         QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("station.keyword",station));
         SortBuilder sortBuilder = SortBuilders.fieldSort("pubTimeLong").order(SortOrder.DESC);
         return esService.search(queryBuilder,0,1,sources,sortBuilder);
