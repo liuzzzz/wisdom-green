@@ -35,8 +35,8 @@ public class RealDataServiceImpl implements RealDataService {
             JSONObject json = JSONObject.parseObject(jsonParams);
             String station = json.getString("station");
             List<String> indexList = json.getJSONArray("indexList").toJavaList(String.class);
-            QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("station",station));
-            SortBuilder sortBuilder = SortBuilders.fieldSort("pubTime").order(SortOrder.DESC);
+            QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("station.keyword",station));
+            SortBuilder sortBuilder = SortBuilders.fieldSort("pubTimeLong").order(SortOrder.DESC);
             SearchResponse response = esService.search(queryBuilder,0,1,indexList.toArray(new String[]{}),sortBuilder);
             List<Map> list = new ArrayList<>();
             for (SearchHit hit:response.getHits().getHits()){

@@ -137,7 +137,7 @@ public class ESUtil {
         if (from < 0){
             from = 0;
         }
-        if (size < 10){
+        if (size < 0){
             size = 100;
         }
         if (from > 0) {

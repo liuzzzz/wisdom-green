@@ -23,8 +23,8 @@ public class DataShareController {
     HistoryDataService historyDataService;
 
 
-    @RequestMapping("realData")
-    public DataResponse realDataAPI(String jsonParams) {
+    @RequestMapping("realTimeData")
+    public DataResponse realDataAPI(@RequestBody String jsonParams) {
         return realDataService.realData(jsonParams);
     }
 
