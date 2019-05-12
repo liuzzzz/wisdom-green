@@ -1,6 +1,7 @@
 package com.secrething.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.secrething.dao.RealDataDao;
 import com.secrething.model.DataResponse;
 import com.secrething.service.ESService;
 import com.secrething.service.RealDataService;
@@ -27,24 +28,20 @@ import java.util.Map;
 @Service
 public class RealDataServiceImpl implements RealDataService {
 
+
     @Autowired
-    ESService esService;
+    RealDataDao realDataDao;
     @Override
-    public DataResponse realData(String jsonParams) {
+    public DataResponse searchPollution(String station,String[] sources) {
         try {
-            JSONObject json = JSONObject.parseObject(jsonParams);
-            String station = json.getString("station");
-            List<String> indexList = json.getJSONArray("indexList").toJavaList(String.class);
-            QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("station.keyword",station));
-            SortBuilder sortBuilder = SortBuilders.fieldSort("pubTimeLong").order(SortOrder.DESC);
-            SearchResponse response = esService.search(queryBuilder,0,1,indexList.toArray(new String[]{}),sortBuilder);
+            SearchResponse response = realDataDao.searchPollution(station,sources);
             List<Map> list = new ArrayList<>();
             for (SearchHit hit:response.getHits().getHits()){
                 list.add(hit.getSourceAsMap());
             }
             return DataResponse.success(list);
         }catch (Exception e){
-            log.error("realData query error",e);
+            log.error("searchPollution query error",e);
             return DataResponse.error(e.getMessage());
         }
     }
